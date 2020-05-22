@@ -23,7 +23,7 @@ export class AppComponent {
   }
 
   public pusherListen() {
-    const pusher = new Pusher('1c99fbc4fad0264365d5', {
+    const pusher = new Pusher('xxxxxxxxxxxxxxx', {
       cluster: 'us2',
       forceTLS: true,
     });
@@ -31,11 +31,9 @@ export class AppComponent {
     channel.bind_global((event, data) => {
       this.message = data.user;
       console.log('Received my-event with message: ' + data.user);
-      console.log('event: ', event)
       if(event != 'pusher:subscription_succeeded'){
         this.notifications++;
       }
-      
     });
   }
   public contar() {

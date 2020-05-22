@@ -9,34 +9,41 @@ import { Observable } from 'rxjs';
 export class AppComponent {
   title = 'notifications';
   totalProducts$: Observable<number>;
-  public notifications: number = 0;
+  public notifications = 0;
   public message;
-  
+
 
   constructor() { }
 
-  
+
 
   ngOnInit() {
-      this.pusherListen();
+    this.pusherListen();
+    console.log('notificaciones INIT', this.notifications)
   }
 
-  private pusherListen() {
-      var pusher = new Pusher('xxxxxxxxxxxxxxxxx', {
-          cluster: 'us2',
-          forceTLS: true,
-      });
-      var channel = pusher.subscribe('branches_channel');
-      channel.bind_global(function(event, data) {
-        this.message = data.user;
-          console.log('Received my-event with message: ' + data.user);
-          if (data.user) {
-              this.notifications++;
-          }
-        });
+  public pusherListen() {
+    const pusher = new Pusher('1c99fbc4fad0264365d5', {
+      cluster: 'us2',
+      forceTLS: true,
+    });
+    const channel = pusher.subscribe('branches_channel');
+    channel.bind_global((event, data) => {
+      this.message = data.user;
+      console.log('Received my-event with message: ' + data.user);
+      console.log('event: ', event)
+      if(event != 'pusher:subscription_succeeded'){
+        this.notifications++;
+      }
+      
+    });
+  }
+  public contar() {
+    this.notifications++;
+    console.log('notificaciones', this.notifications)
   }
 
   view() {
-      this.notifications = 0;
+    this.notifications = 0;
   }
 }

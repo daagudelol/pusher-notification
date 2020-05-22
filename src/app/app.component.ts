@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import Pusher from 'pusher-js';
 import { Observable } from 'rxjs';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,7 +14,7 @@ export class AppComponent {
   public message;
 
 
-  constructor() { }
+  constructor(private _snackBar: MatSnackBar) { }
 
 
 
@@ -29,13 +30,28 @@ export class AppComponent {
     });
     const channel = pusher.subscribe('branches_channel');
     channel.bind_global((event, data) => {
-      this.message = data.user;
-      console.log('Received my-event with message: ' + data.user);
+      
+      let req = data.req_number;
+      
       if(event != 'pusher:subscription_succeeded'){
         this.notifications++;
+        this.message = ` ${data.user} realizó una nueva requisición`;
+        this.openSnackBar(this.message );
       }
+      
     });
   }
+
+  public openSnackBar(message: string) {
+    
+    
+    this._snackBar.open(message, '', {
+      duration: 2000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+    });
+  }
+  
   public contar() {
     this.notifications++;
     console.log('notificaciones', this.notifications)
